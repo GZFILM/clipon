@@ -1,0 +1,602 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>קליפון</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700&family=Karantina:wght@400;700&display=swap">
+<style>
+/* Layout: one narrow phone-first column; a dark "film leader" band on top carries the logo and the clip title,
+   chapters below are numbered folders exactly as they will land in Drive; a fixed send bar at the bottom. */
+:root{
+  --bg:#EDF0F5; --surface:#FFFFFF; --ink:#111B30; --muted:#566178; --line:#D3D9E4;
+  --accent:#FFC21A; --accent-ink:#1B1500; --band:#111B30; --band-fg:#F4F6FA; --band-muted:#A9B3C7;
+  --ok:#1C7A4C; --ok-bg:#DDF2E6; --wait-bg:#FFF0C2; --wait:#6B4E00; --danger:#B3261E; --bad-bg:#FBE1DE; --field:#F6F8FB;
+  --display:"Karantina","Heebo","Arial Hebrew",Arial,sans-serif;
+  --body:"Heebo","Arial Hebrew","Segoe UI",Arial,sans-serif;
+  --mono:ui-monospace,"Cascadia Mono",Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0B111D; --surface:#151E31; --ink:#EEF1F6; --muted:#9CA7BC; --line:#2A3650;
+  --accent:#FFC21A; --accent-ink:#1B1500; --band:#060A13; --band-fg:#F4F6FA; --band-muted:#8E99AF;
+  --ok:#6FD3A0; --ok-bg:#12382A; --wait-bg:#3D3210; --wait:#FFD866; --danger:#FF8A80; --bad-bg:#45191A; --field:#0F1727; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0B111D; --surface:#151E31; --ink:#EEF1F6; --muted:#9CA7BC; --line:#2A3650;
+  --accent:#FFC21A; --accent-ink:#1B1500; --band:#060A13; --band-fg:#F4F6FA; --band-muted:#8E99AF;
+  --ok:#6FD3A0; --ok-bg:#12382A; --wait-bg:#3D3210; --wait:#FFD866; --danger:#FF8A80; --bad-bg:#45191A; --field:#0F1727; color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.5}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h1,h2,h3,p{margin:0}
+
+.demo{background:var(--accent);color:var(--accent-ink);font-size:14px}
+.demo-in{max-width:640px;margin:0 auto;padding-block:8px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between}
+.tabs{display:flex;gap:6px}
+.tabs a{padding:6px 12px;border-radius:999px;color:var(--accent-ink);text-decoration:none;font-weight:500;border:1.5px solid var(--accent-ink)}
+.tabs a[aria-current="page"]{background:var(--accent-ink);color:var(--accent)}
+
+.band{background:var(--band);color:var(--band-fg)}
+.band-in,.main{max-width:640px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.band-in{padding-block:20px 22px;display:flex;gap:16px;align-items:center}
+.logo{flex:none;width:52px;height:71px;background:var(--accent);-webkit-mask:var(--logo) center/contain no-repeat;mask:var(--logo) center/contain no-repeat}
+.band-txt{min-width:0;display:flex;flex-direction:column;gap:2px}
+.brand{font-size:13px;letter-spacing:.14em;color:var(--band-muted);direction:ltr;text-align:right}
+.band h1{font-family:var(--display);font-weight:700;font-size:44px;line-height:1;text-wrap:balance;overflow-wrap:anywhere}
+.band .sub{color:var(--band-muted);font-size:15px}
+
+.main{padding-block:20px 40px;display:flex;flex-direction:column;gap:20px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.card h2{font-size:19px;font-weight:700}
+.hint{color:var(--muted);font-size:15px}
+label.lbl{font-weight:500;font-size:15px}
+input[type=text],input[type=url],input[type=number],textarea{width:100%;background:var(--field);border:1.5px solid var(--line);border-radius:10px;padding:12px;min-height:48px}
+textarea{min-height:96px;resize:vertical}
+.title-in{font-family:var(--display);font-size:34px;line-height:1.1;padding:8px 12px}
+.title-in::placeholder{font-family:var(--body);font-size:16px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:10px 18px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);font-weight:500;cursor:pointer;text-decoration:none;color:var(--ink)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
+.btn.small{min-height:40px;padding:6px 12px;font-size:15px}
+.btn.danger{color:var(--danger)}
+.btn.wide{width:100%}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.row > .grow{flex:1 1 180px;min-width:0}
+
+.steps{display:flex;flex-direction:column;gap:6px;padding:0;margin:0;list-style:none;counter-reset:s}
+.steps li{counter-increment:s;display:flex;gap:10px}
+.steps li::before{content:counter(s);flex:none;width:26px;height:26px;border-radius:50%;background:var(--ink);color:var(--surface);font-weight:700;font-size:14px;display:grid;place-items:center;margin-top:1px}
+
+.chap-head{display:flex;align-items:baseline;gap:10px}
+.chap-num{font-family:var(--mono);font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.appname{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px}
+.appname b{font-family:var(--display);font-weight:700;font-size:28px;line-height:1;color:var(--accent)}
+.appname small{font-size:13px;color:var(--band-muted)}
+.quote{margin:4px 0;padding-inline:4px;display:flex;gap:10px;align-items:flex-start}
+.quote::before{content:"\201D";font-family:var(--display);font-size:84px;line-height:.8;color:var(--accent);flex:none}
+.quote blockquote{margin:0;font-family:var(--display);font-size:32px;line-height:1.05;text-wrap:balance}
+.paid{font-size:14px;font-weight:700;background:var(--wait-bg);color:var(--wait);border-radius:8px;padding:6px 10px;align-self:flex-start}
+.shots{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.shots li{display:flex;gap:10px;align-items:baseline}
+.shots b{flex:none;width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-size:15px;align-self:flex-start}
+.shots .opt{color:var(--muted)}.shots .opt b{background:var(--field);color:var(--muted);border:1px solid var(--line)}
+.tips{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.tips li{padding-inline-start:12px;border-inline-start:3px solid var(--accent)}
+.songs{font-weight:700;font-size:15px;border-radius:8px;padding:8px 12px}
+.songs.bad{background:var(--bad-bg);color:var(--danger)}
+.songs.mid{background:var(--wait-bg);color:var(--wait)}
+.songs.ok{background:var(--ok-bg);color:var(--ok)}
+.shots li{align-items:center;gap:12px}
+.shots li span{min-width:0;line-height:1.35}
+.sk{flex:none;width:60px;height:60px;border-radius:10px;background:var(--field);border:1.5px solid var(--line)}
+.sk .f{fill:var(--accent)} .sk .o{stroke:var(--ink);stroke-width:1.6} .sk .d{fill:var(--ink)}
+.sk .b{fill:#FF9D8A} .sk .w{fill:#FFFFFF} .sk .hl{stroke:var(--field);stroke-width:1.4}
+.ai-line{font-weight:500}
+.mark{flex:none;width:58px;height:66px}
+.mark .ph{fill:none;stroke:var(--band-fg);stroke-width:2.4}
+.mark .c{fill:none;stroke:var(--accent);stroke-width:6.5;stroke-linecap:round}
+.mark .e{fill:var(--band-fg)} .mark .ck{fill:#FF9D8A}
+.mark .sm{fill:none;stroke:var(--band-fg);stroke-width:1.9;stroke-linecap:round}
+.mark .bk{fill:none;stroke:var(--band-fg);stroke-width:2.6}
+.mark .fr{fill:var(--accent)}
+.mark .pl{fill:var(--accent-ink);stroke:var(--accent-ink);stroke-width:3.2;stroke-linejoin:round}
+.band .logo{order:3;width:30px;height:41px;background:var(--band-fg);opacity:.9;align-self:flex-start}
+.band .band-txt{flex:1}
+.chap-head{align-items:center}
+.chap-head .sk{width:52px;height:52px}
+.sk .s{fill:none;stroke:var(--ink);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.max{font-weight:400;font-size:15px;color:var(--muted);white-space:nowrap}
+.toast{text-align:center;border-radius:16px}
+.chap-count{margin-inline-start:auto;font-size:14px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:8px}
+.tile{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;border:0;padding:0;background:var(--field);cursor:pointer;max-width:100%}
+.tile img,.tile video{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.tile[aria-pressed="true"]{outline:4px solid var(--accent);outline-offset:-4px}
+.badge{position:absolute;font-size:12px;font-weight:700;padding:1px 7px;border-radius:999px;background:var(--band);color:var(--band-fg);font-variant-numeric:tabular-nums}
+.badge.n{top:5px;inset-inline-start:5px}
+.badge.v{bottom:5px;inset-inline-start:5px;background:var(--accent);color:var(--accent-ink)}
+.badge.e{bottom:5px;inset-inline-end:5px}
+.badge.c{top:5px;inset-inline-end:5px;background:var(--accent);color:var(--accent-ink)}
+.tools{background:var(--field);border:1px solid var(--line);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:8px}
+.empty{border:1.5px dashed var(--line);border-radius:10px;padding:14px;color:var(--muted);font-size:15px;text-align:center}
+.links{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.links li{display:flex;gap:8px;align-items:center;background:var(--field);border-radius:8px;padding:6px 10px}
+.links span{flex:1;min-width:0;overflow-wrap:anywhere;direction:ltr;text-align:left;font-size:14px}
+.err{color:var(--danger);font-size:15px}
+.okbox{background:var(--ok-bg);color:var(--ok);border-radius:12px;padding:14px;font-weight:500}
+
+.sendbar{position:fixed;inset:auto 0 0 0;background:var(--surface);border-top:1px solid var(--line);z-index:5}
+.sendbar-in{max-width:640px;margin:0 auto;display:flex;gap:12px;align-items:center;padding-top:10px;padding-bottom:calc(10px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.sendbar .cnt{flex:1;min-width:0;font-size:15px;color:var(--muted)}
+.pad-bottom{height:76px}
+
+.pill{font-size:13px;font-weight:700;padding:2px 10px;border-radius:999px;background:var(--wait-bg);color:var(--wait);white-space:nowrap}
+.pill.ok{background:var(--ok-bg);color:var(--ok)}
+.client-top{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+.client-top h2{overflow-wrap:anywhere}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:6px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);cursor:pointer;font-size:15px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.chip.static{cursor:default;background:var(--field)}
+.chip .x{border:0;background:none;cursor:pointer;font-size:18px;line-height:1;padding:0 2px;color:var(--muted)}
+.tree{font-family:var(--mono);font-size:14px;background:var(--field);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:3px;overflow-wrap:anywhere}
+.tree .in{padding-inline-start:18px;display:flex;justify-content:space-between;gap:10px}
+.tree .in span:last-child{color:var(--muted);white-space:nowrap}
+details summary{cursor:pointer;font-weight:500;min-height:40px;display:flex;align-items:center}
+details .body{display:flex;flex-direction:column;gap:10px;padding-top:6px}
+.kv{font-size:15px}.kv b{font-weight:500;color:var(--muted)}
+.copybox{font-size:14px;background:var(--field);border-radius:8px;padding:10px;user-select:all;overflow-wrap:anywhere}
+.toast{position:fixed;inset:auto 0 calc(96px + env(safe-area-inset-bottom,0px)) 0;margin:0 auto;width:max-content;max-width:calc(100% - 32px);background:var(--band);color:var(--band-fg);padding:10px 16px;border-radius:999px;font-size:15px;z-index:9}
+@media (prefers-reduced-motion:no-preference){ .toast{animation:pop .2s ease-out} @keyframes pop{from{transform:translateY(8px);opacity:.4}to{transform:none;opacity:1}} }
+</style>
+
+<div id="app" dir="rtl" lang="he"></div>
+<div id="toast" class="toast" dir="rtl" hidden></div>
+
+<script>
+document.documentElement.dir='rtl'; document.documentElement.lang='he';
+// The Clipon mark: a loose photo behind, a tidy yellow frame in front, and a play button.
+const MARK='<svg class="mark" viewBox="0 0 56 64" role="img" aria-label="הלוגו של קליפון"><rect class="e" x="3.2" y="16" width="2.8" height="7" rx="1.4"/><rect class="e" x="3.2" y="25" width="2.8" height="7" rx="1.4"/><rect class="e" x="50" y="20" width="2.8" height="10" rx="1.4"/><rect class="ph" x="7" y="3" width="42" height="58" rx="10"/><circle class="e" cx="28" cy="10.5" r="2.4"/><path class="sm" style="stroke-width:1.5;opacity:.7" d="M22 55.5 H34"/><path class="c" d="M38.7 24 A14 14 0 1 0 38.7 42"/><circle class="e" cx="23.5" cy="31" r="1.9"/><circle class="e" cx="31.5" cy="31" r="1.9"/><circle class="ck" cx="20.6" cy="35.6" r="1.8"/><circle class="ck" cx="34.4" cy="35.6" r="1.8"/><path class="sm" d="M23.8 36.2 Q27.5 39.6 31.2 36.2"/></svg>';
+const TEST=true;          // public client page: no admin screen
+// ===== הגדרות =====
+const SCRIPT_URL='';      // כתובת ה-Web App של Google Apps Script (נגמרת ב-/exec). ריק = מצב בדיקה, שום דבר לא נשלח.
+const CHUNK=8*1024*1024;  // גודל חתיכה בהעלאת סרטונים (חייב להיות כפולה של 256KB)
+const IMG_MAX=3000, IMG_Q=0.88;   // כיווץ תמונות: הצלע הארוכה עד 3000 פיקסל, איכות JPEG 88%. IMG_MAX=0 = לשלוח מקור
+document.documentElement.style.setProperty('--logo','url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAY0AAAIcBAMAAAD4W++ZAAAALVBMVEUAAAAjHyAjHyAjHyAjHyAjHyAjHyAjHyAjHyAjHyAjHyAjHyAjHyAjHyAjHyC/gmIZAAAADnRSTlMAP4/gEAmowyNjeDBQGMxKmQMAAAEBaVRYdFhNTDpjb20uYWRvYmUueG1wAAAAAAA8P3hwYWNrZXQgYmVnaW49Iu+7vyI/PjxyOlJERiB4bWxuczpyPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj48cjpEZXNjcmlwdGlvbiB4bWxuczp4PSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIj48eDpDcmVhdGVEYXRlPjIwMjAtMDQtMTRUMjM6NDU6MDMrMDM6MDA8L3g6Q3JlYXRlRGF0ZT48L3I6RGVzY3JpcHRpb24+PC9yOlJERj48P3hwYWNrZXQgZW5kPSJyIj8+UkcE5AAAEOZJREFUeNrcnD2LE1EUhs9MZvLh6qD+gGAnKIRtrNSwoHUICIKN+AuCtWIQrGyCaGEXBAsrwza2Ymcnir2oq8b48fwG2XHQ4MfemZwRc85TZLvdeffee857zrkT+UH6VlwQ8UQ8EPFaPBDxUYyz9V3HQtKzYpj2zlauY572OCJ2idjMP7kP78UuEbshNwHgndhlA65/12F7PRLYLHTYjr3wJv8ELolhxuwUOkzHK5nBQRFg96dhHufnomdex0VYFDq2xDANoNAxFMPsA2591yGW2QDe5zp2xDTA21yH8ZpwDGz3gU9immfAJ4A3YpVk9+MVBZ/FKr2FiGSAcdsOJ0ViDzq4JxFg3LY/g/nwgH0dMXA6AqyXHyPgDmC9/GiyxD2xy4gc82VUw4mOtO9DhwzIMV8ObjjRIVMnOlpQcF0sk0LBZTFNl+9YH0m1KJiLaRIfCUSkR8GmmOYiBV/ENPsAMN9QlAQHFcguI/udhpwJBR/ENJkTa7IPH5G3DYDtFm8OTiLvyEXPROQxPiJvhg/Pu48fbIthEpxE3h4+PO+AHPOXAWJ8eN6UH3wVy3SdRN7YSbtaRk4ib5McH9czPPSr05mDue0uA/v3TJZMr/37ZE0ouCWW6Tgppjbw0cZKnRRT0neS0mdQsBDLTJyM0jN8jG6b+OiP7sdHfzTFSZXeBxdecQouvOIrJxurgY+I1QEXqTAFH6lwDC7aJl1wYd4zljghZokBD1VhmyUsfxVIH/DQbpiCC2+S4eNFihjwMJpq42RjjZ1srK6TjZU52VgdnGws8JEKewAOhukDwMM7bE1yzL9z2+Ynpr+zYQwu2g0TcNFuaAE4aJBGOEnpfSeRt0tO9ZlnZ70K+gawSqM3Ha+XPV71gJxbNxez2gFp99ftNZjuShlksnbJpkFOtdduo/VrQUarWKzpr3swlv9OH5aREpz/dRp3YQ0GWhOq9nk3fjlLyVPVXZubR3eOPRI1rcoHfcZyPZ8cVvmAZAbA1bprkPcS4sxyjH7xAGCuv3e0qLkG+VI+MHw6dLuv9ckv65sZv6LSQKfH7+wM1dcL4Vqt7WpK/wPrGMtNaxwlJVVq2/1AfQsSUedsr1fBYY34M5vqmK8ftl4sn0DO8BP9/zLtB1ZV0+Y9UnYf6JvDTah1QUo342b8lc9qr60/Ic9YYhH0VQWrtygO3L2yLSJpYFWV3n1YdjsDK93hao+Bh0XAr7PxFJV7oAl78a5ifDy19Tiwqkpr8q6cEYMVm8M32INbWu8efqABe/N8pcKNOlv+rTIPNCPA8cpW5HcWWu8eLkEIMn+iXQ6o0Zp8DNgw1e6esDfbomEQnhNGBJlXbgfUnUHisFXsEORjxT9U/0FPwuY1Jshr7bbSD79HwaARA/pnGFdYU30lsIcO3TO0CaAt0wdBa5IR5Es4Uf1rHVlwg2R1xKuL/1pHM/hAGWGGwQrhX+vYH8xGrTry4Phf60iDbYOYMJsSgCo69IGXxWo6PoQKQW3MCzMJ7fQY/caKtDkoTCNUpcagzugd7W8I0wktbwfUGSQmyCVREiqUI0rwQa3jiSiZBnZ6mzKodQxFySBw3lLKsKXUMRctcegXUoZtpQ79wDQhcLOhRwkOBnTowtU37q6d5YkoiE7irm6MBl+tS4yIYrGoaCUsKj4KIQgpLASxsQ0WClaLouCjWMQfEET7oNgH9QeI9iLiY2N83N/gC1z9NrtzZ8/NzdVTC3Iyd2bOnDt3Py1E1ReFj57b4HHH+BJsViLAEBNrreJAOJqVP21HaQHs5zPC4VUqhInSQQbqqz0L2NCYsjag3C/XSC8c4yorKVIG9BUlfDhxTKp+3ETp4B5g7uY1EsTZquaMlKscrwXHCpXuOQ5Iz9VU8F8gx0o4HWTSPH/P2gB8tcIRVA0DqxSDd0839nizXENk4qgKtM8drK/wLc5HMoSoSu6ERhTeKl5b4ZhU6YTQyEDa5rMcR6fqNwrB1sHXvbdbzT+XKgYkhCUFXy+uGC9YxYCEZq6dfWUhQ6pObWhockixHKtdFc/p8XgHBD2fzjeaaSH9soDwPD4RsJdhuoesqQh2aMro8BMkzepX94zhIX69vhbRWHoHLy4PSGpqIvVeDus7xCe60k27HNNT+ZkD26B39W6CSP+m6gJd6kJe+JEW9uh+ongwsl+PR6NC+UzAsusp1CEOYm3ZEJf0Jy49ZxZ4eEN9+TMpD4iHpjnKYyyQcavLl0F99NoCdCRDiRz1K44N2oYTXavi6LyYXJNZKmF5OQJEu77lMvvDaJ72er/L4HFhv2+WO2QJKK5Gms5qf84PtJZJH93oTyt/zwuSULN6c/QXD+/oy43PerGYR7+0X0fyLJdb9u9ovRlvqFWqAyPwrcG6SAmA8qDShh2hK/qBgpCHHknHJxSho2CqcAht9yLelPL4LAsHzgNq6dkx9Fi9tsujvajUi+3yICVDJuiwVnkMlQxX7GW5egs8IzN06Z2Y4oF0dNxq95VtHh0lxLsrkpEZ54EmJKR3m9Z5rFNiHAR4ALlovu9eNsYDsl/xjOy6x4MUD/lL+pYVHvJGKH1zHdjnEcEBwaPMaGuooWOO+0gZwHvgHt2QXlxlhgcqTOCV7va/wuMDd7Bs8+gsRjOsVjy2XY+XzkOxdTDr7WS3CUJ0GwfPyCf4JQjRGp4HLnjxOSRma96tZNk83sC96QtRgYl9Hu/hM7uDfuHV0ASPdabFD/8RlC2H1HdcJKKcCePsQyMovmNyWq3A3o3JT/d45RDzMgI8P4jHlHSwuaAvX6sZkX/0Jq3A4YgRowgP3CS7vVLvny3dTjm8nRkOAB64I+ef1HdVzzxgwgHwgPfy2pKb3jNjJhzQCApVk4aIuhcz4QD6B/buoSUzuQeycOA8voivWD4INuimp2zxeCcW1BsE+4bnCONhvmBNWOL8d4txHniiJ8L10PVMOAAeiL0UiLcamXAAOhFJkDXiB1GJIBxwH9QO/kh88z5WGVnlMRMdq5m2oyYNR55Wi5vRB/KpqJ9hL23l+CiZpO5oOzjScOCW8hX9cCj9k07WeXxkVZ8gPUAMFxiQVNuhxxEt7iqyZew5LWIy4dNUZPNvzaYKQabplnygRaOvIFxikhw7Vrjhju9phDb/ChrjeQNzYRP/42G4cMflYjtGPnJuQSjGhZP1gorwhwrJcgtCcZdWE3nOtEsU+IZJNy2eLOb9436yASXDhqBYs1b6nUcAw9mWMNlAKacXWzUMZxzPpTwCRp404mWEg1IpD0orr9ODBAgHgLNSHrniyHE+lyPDwgtRO+jIN8MHFakeFYqZJayW8/Dj0lQfFQSxLbTkPGhQZp5sVkA4MLRr8PDj+V39cfFa1xq8GjxoMFcv3igpyHZQh4efzBkNjyOrxDgSGY/S6rAP+FiXfWHyUOAXfSSbCGV9UFCur5BNvBby0A7IfrKKfj0eq7FtZfPo1ONB49qWEA58RbGrKwQysoxmTR40YnwUy1hbl0eLsbAto1F7wXIE7QO5w+OvgCz9z/Y36u/5pI60QIYHu/AaONICf8ID1jFSN1ogw4OvQ4EjNfcHfOTFxDXm39gEsh7jx07U3J+IkcXdAZNCFhEhnzbwYxdqbg2H9yGzxA4ZofYHwhxDUOcuaZDqMobkPVoWOuB+5ZC5v7WFDviiqOVCkn9HE10IH9kfZvGd0a9VSvMtLREBvLd7DTAQ3RCK+RffYbmOA39aGyT4LQGOIb5H7W/q9XYfInvAX1mTs0iFQtFV/HH17JyLbr6hO1FboYbuihA029C75CrWC4Wis/hfeCQyR9FZjFUBTlnQBr6O446tgzRCh9zCGo3QsYs/fTT/E6HY+E94eP+J4CWhM+osvrV3/q5PBEEU300umnw1ARVEBAMqWFjcn3CI2glB0MIqhWCb2irYWAgiYiFWaQSxEsQ+WFkGrUQQQYO/mvc36F3uYkxyud2Y8+aNftqkeezb29nZ2dmBjoDXTHQEiis1P7IqFdzpKAkU9ynRcVBJwGuVBLxWScBrlQS8/6QOwYHiv6lDbsBrlWR4rZIMr1WS4bVKMrxWSWb039QhN+C1niUNUrHQEfAW6xBSm1SoQ0fAaz2b1krFQkfA+4/qEBu4W+jIVFvf9z+EYqFjIfTUMTVCWatD1G00Zx0qIl4LQMPZswWgIdVgARVf3j14IKFUN4d98OW1kUhnizbbEukBgII9YRfeXDYCCZFAf4qOGP5YsY0Y/lixhRns2eoOlhHXvceJLnQYK0IK93FOCxnc6eoPgApjZbYi34QcAAAFX979SnT0MYM9dh/jF8znnRNsyRdZed5n2JapqC/WPWwvRNIJQh0LECcWW4jhX9MbmMO9vQ2xAHGm94qSAbHQMSAWOgbEQseAWOgYEAsdA2KhY0CKdEjrGLyzxy3FtFLb8ZtF08MiDtRjHRqsFevQYK06Yvg/vh0swpuU24mOz6Zy+tBhrB50GKsHHcbqQYexetBhrB50GKsHHcYaYze8NP5IycMJSpLuQz5M9ykmgAZjBYAKY+0HVBirC6gwVggdxnoGHca6Ah3GakRYB18N0Mo6SHpemDcgbMVlV6DCWE1AhbHuAVBgrCYADcbqAyqM9QxQYSwnHQTtyj5Ah7FayIOs/DIEVBhrvw5jNSMdxhoBAL+xkmmuwFgTrIOuUCNAIRR32WpwgOCSZAcp5MbqIYXcWHMd5Mb65StuYx1EBrmxRnBFdiuj9hAboblz1H4MBxj6BVx6gBhyY8UggdxY8yCL3lhtJNAby8IF+a1z3HTIb53jpkN+65xMB7ux5jrIjTXXQW6sRR3MwXuAzbDc617SQVul8bsO3rxiWTq+m43Q6Cjo/0yjA+YvM0QCvY4PWIA4dK/BFdl9kwMsQ1q5H2IR3pKA33QQHxRGmMMcKBr8Bm2g2EACvY4aEuh19JBAryNEAruObHqw68iW8/86qtNx4NBtDTr2ANz00XHy0KFTQ3E6ZiXtNzwaQb5MBD8/IysuuYKY6S2TYD1CvsabJ4LixNQh37x0ZAR3QyH7jxpSbnnqyGgfjiQkeMdI+eyvI+NNWH2eIVqswGseP72d1a89rDgPV/tt57lv+ykbHI+qzO/eW7zlcLXrr+MXjTvD6i6vDTFnOvzjT+j7QUX36u2uUx/vh5WsgvXdp6LuRBUUNExKSA02jmKJT6WX9pWTqj0wwCLfS8/ttkpKnTdeYc70qSmdTmk9PYJ0Rb1+7LIpn1GpVUjBxXwNAqZH5b1iVthjqW5zzbmRP0EfsvUrWE9AUZlQTI2t7UIOPYbChF0flT9GwlTWOwb+t83Nu1j218obpq1S9w1GLh06IaEF6jJd8mmRIbp+yp0aeVCV8UF2Aa4zkeyyClf2ZJfrODOWXQbmSoM9yE3ZL/5GjRsh+152hqXfy87oS6/Kc2QovGp1+yvBU1HXULbfCd4/QrUnz7PVF2O6dNP84Po4cESUskro57x1EZKt5mHOw8ZBKKvPm3/+7X76y0hGDbEbtQ1HGq+E9Ohxob9pt3eeZ28+2VjE8gLLiHi4Zw3DzUmdUFpv/BwaBcucBUQ+0bVMs+gg+QJHBs4WNnwZ4BfT10YoB1dsteEfX4SGJD+pFdcnvM0CkkdGLnsOm4v3IYCzJ4xkDsh+KtudiGOZK6RLET355uA+GlYCHdPDmLGK6WFMiyA15cSAIHxyYZ+K6REPiPjMrRt1/tUjHRD61SOdIbIznt4DInaX5LcL+WTYCYSXKTgjOZHuQ8S+mKeM5CagvajrGA7TlFgzuQ1XzxkefgBzt1SIneZoCQAAAABJRU5ErkJggg==")');
+
+const TYPES={
+  bar:{label:'בר מצווה',chapters:['ינקות','גן וילדות','בית ספר','משפחה','חברים ותחביבים','היום, כללי','כוכב הערב לבד, לסוף הקליפ']},
+  bat:{label:'בת מצווה',chapters:['ינקות','גן וילדות','בית ספר','משפחה','חברות ותחביבים','היום, כללי','כוכבת הערב לבד, לסוף הקליפ']},
+  bday:{label:'יום הולדת',age:true,chapters:[]},
+  bday50:{label:'יום הולדת',age:true,dec:50,chapters:[]},
+  bday60:{label:'יום הולדת',age:true,dec:60,chapters:['ילדות','סבא וסבתא','בית ספר','נעורים','צבא','עבודה','משפחה קרובה','משפחה (בני דודים, דודים, אחיינים)','חברים','תחביבים','ספורט','אני והכלב שלי','טיולים בחו״ל','טיולים בארץ','היום, כללי','כוכב הערב לבד, לסוף הקליפ']},
+  bday70:{label:'יום הולדת',age:true,dec:70,chapters:[]},
+  bday80:{label:'יום הולדת',age:true,dec:80,chapters:[]},
+  film:{label:'סרט בר/בת מצווה',noun:'סרט',chapters:[]},
+  other:{label:'אחר',chapters:['פרק ראשון','פרק שני','פרק שלישי']}
+};
+// Small drawings that show each kind of shot inside a camera frame.
+const svg=inner=>`<svg class="sk" viewBox="0 0 48 48" aria-hidden="true">${inner}</svg>`;
+const IC={
+  close:svg('<ellipse class="f o" cx="24" cy="54" rx="22" ry="13"/><circle class="f o" cx="24" cy="27" r="13"/><ellipse class="d" cx="24" cy="15.5" rx="18" ry="3.6"/><path class="d" d="M14.5 15 Q14 4 20 5.5 Q24 8.5 28 5.5 Q34 4 33.5 15 Z"/><rect class="b" x="14.6" y="11.6" width="18.8" height="2.4"/><circle class="d" cx="19.5" cy="27" r="1.9"/><circle class="d" cx="28.5" cy="27" r="1.9"/><circle class="w" cx="20.1" cy="26.4" r=".6"/><circle class="w" cx="29.1" cy="26.4" r=".6"/><circle class="b" cx="15.6" cy="31" r="2.3"/><circle class="b" cx="32.4" cy="31" r="2.3"/><path class="s" d="M21 32 Q24 35 27 32"/>'),
+  profile:svg('<ellipse class="f o" cx="20" cy="55" rx="18" ry="14"/><circle class="f o" cx="35.3" cy="26.5" r="2"/><circle class="f o" cx="23" cy="27" r="12.5"/><circle class="f" cx="33.7" cy="26.5" r="1.7"/><ellipse class="d" cx="24" cy="16.5" rx="16" ry="3.2"/><path class="d" d="M14.5 16 Q14 5 24 5 Q34 5 33.5 16 Z"/><rect class="b" x="14.6" y="12.4" width="18.8" height="2.4"/><circle class="d" cx="29" cy="24.5" r="1.9"/><circle class="w" cx="29.6" cy="23.9" r=".6"/><circle class="b" cx="25.5" cy="30.5" r="2.3"/><path class="s" d="M28 33.5 Q30.5 35 32.5 33"/><path class="s" d="M17 26 q-2.5 2 0 4"/>'),
+  long:svg('<path class="s" d="M8 45 H40"/><path class="b o" d="M19.5 16 L11 37 L24 32.5 L37 37 L28.5 16 Z"/><path class="s" d="M21.5 30 L20.5 44 M26.5 30 L27.5 44 M29 18 L36 10 M19 18 L13.5 23 L18.5 26"/><rect class="f o" x="18.5" y="15" width="11" height="16.5" rx="4.5"/><circle class="f o" cx="24" cy="9" r="5.8"/><circle class="d" cx="22" cy="9" r="1"/><circle class="d" cx="26" cy="9" r="1"/><path class="s" style="stroke-width:1.2" d="M22.3 11.4 Q24 12.8 25.7 11.4"/>'),
+  back:svg('<ellipse class="f o" cx="24" cy="54" rx="22" ry="13"/><circle class="f o" cx="10.8" cy="28" r="2.8"/><circle class="f o" cx="37.2" cy="28" r="2.8"/><circle class="f o" cx="24" cy="27.5" r="13"/><path class="d" d="M10.6 30 A13.6 13.6 0 1 1 37.4 30 Q24 36 10.6 30 Z"/><path class="s hl" d="M22 21 q3.5 -3 5.5 0 q1 3 -2.5 3.5"/>'),
+  q45:svg('<circle class="f o" cx="8.6" cy="22" r="2.8"/><circle class="f o" cx="20" cy="21" r="12.5"/><path class="d" d="M7.6 19 Q9 7 21 8.4 Q30 9 32 15 Q20 11.5 7.6 19 Z"/><circle class="d" cx="20.5" cy="21" r="2"/><circle class="d" cx="29" cy="21" r="1.5"/><circle class="w" cx="21.1" cy="20.4" r=".6"/><circle class="b" cx="15.5" cy="26" r="2.4"/><path class="s" style="stroke-width:1.5" d="M26 22.5 q2.4 1.8 0 3.4"/><path class="s" d="M21.5 28 Q25.5 30.5 29 27.5"/><path class="s" d="M9 40 Q22 47 35 40"/><path class="s" d="M35 40 l-5 0 M35 40 l-1.6 4.6"/><text class="d" x="40.5" y="13" text-anchor="middle" direction="ltr" font-size="8.5" font-weight="700">45°</text>')
+};
+// One small character per category: the same face with a prop that says what the chapter is about.
+const H=(cx,cy,r)=>{const k=r/12,n=v=>+v.toFixed(1);return `<circle class="f o" cx="${cx}" cy="${cy}" r="${r}"/><circle class="d" cx="${n(cx-4*k)}" cy="${cy}" r="${n(1.7*k)}"/><circle class="d" cx="${n(cx+4*k)}" cy="${cy}" r="${n(1.7*k)}"/><circle class="b" cx="${n(cx-7.5*k)}" cy="${n(cy+4*k)}" r="${n(2*k)}"/><circle class="b" cx="${n(cx+7.5*k)}" cy="${n(cy+4*k)}" r="${n(2*k)}"/><path class="s" style="stroke-width:${n(1.8*k)}" d="M${n(cx-2.5*k)} ${n(cy+4.5*k)} Q${cx} ${n(cy+7*k)} ${n(cx+2.5*k)} ${n(cy+4.5*k)}"/>`;};
+const B=H(24,28,12), T='style="stroke-width:1.3"';
+const CAT={
+  'ינקות':svg(B+'<path class="s" d="M24 16 q-3 -5 1 -6 q3 0 1 3"/><circle class="b o" cx="24" cy="34.5" r="3.2"/><circle class="w" cx="24" cy="34.5" r="1.1"/>'),
+  'גן':svg('<path class="s" '+T+' d="M39 21 q-2 6 -4 13"/><ellipse class="b o" cx="39" cy="14" rx="5.5" ry="6.5"/>'+H(22,29,12)+'<path class="s" d="M22 17 q-1 -4 2 -5"/>'),
+  'ילדות':svg(B+'<path class="d" d="M12.3 23 A11.9 11.9 0 0 1 35.7 23 Z"/><rect class="d" x="33" y="20.4" width="10" height="2.6" rx="1.3"/><circle class="b" cx="24" cy="12.5" r="1.5"/>'),
+  'סבא וסבתא':svg(B+'<circle class="w o" cx="13.5" cy="20.5" r="4"/><circle class="w o" cx="34.5" cy="20.5" r="4"/><circle class="w o" cx="18" cy="17" r="3.4"/><circle class="w o" cx="30" cy="17" r="3.4"/><circle class="s" '+T+' cx="20" cy="28" r="3.7"/><circle class="s" '+T+' cx="28" cy="28" r="3.7"/><path class="s" '+T+' d="M23.7 28 h.6"/><path class="w o" d="M17.5 34 q3.2 -3 6.5 0 q3.3 -3 6.5 0 q-3.2 3 -6.5 1 q-3.3 2 -6.5 -1 Z"/>'),
+  'בית ספר':svg(H(20,29,12)+'<g transform="rotate(28 39 20)"><rect class="b o" x="36.7" y="7" width="4.6" height="19"/><path class="w o" d="M36.7 26 h4.6 l-2.3 4.6 Z"/></g>'),
+  'נעורים':svg(B+'<path class="s" style="stroke-width:2.4" d="M10.8 28 A13.2 13.2 0 0 1 37.2 28"/><rect class="d" x="7.8" y="25" width="5.4" height="9.5" rx="2.4"/><rect class="d" x="34.8" y="25" width="5.4" height="9.5" rx="2.4"/>'),
+  'צבא':svg(B+'<path class="d" d="M11.6 23 Q9.5 12 24 13 Q39.5 13 37 20.5 Q29 24.5 11.6 23 Z"/><circle class="d" cx="15" cy="12.4" r="1.7"/>'),
+  'חתונה':svg(H(22,26,12)+'<path class="d" d="M22 41.5 l-6 -3.5 v7 Z M22 41.5 l6 -3.5 v7 Z"/><path class="b o" d="M39 11 c-2 -4 -7 -1 -4 3 l4 4 l4 -4 c3 -4 -2 -7 -4 -3 Z"/>'),
+  'לימודים':svg(B+'<path class="d" d="M24 8.5 L40 14.5 L24 20.5 L8 14.5 Z"/><path class="s" '+T+' d="M37 15.6 v7"/><circle class="b" cx="37" cy="24" r="1.7"/>'),
+  'עבודה':svg(H(24,25,12)+'<path class="d" d="M12.4 22 Q14 11 27 12.6 Q20 16.5 12.4 22 Z"/><path class="b o" d="M22.4 38 h3.2 l-.9 2.4 l1.9 4.8 l-2.6 2.6 l-2.6 -2.6 l1.9 -4.8 Z"/>'),
+  'משפחה קרובה':svg(H(24,30,12)+'<path class="b o" d="M24 8 c-2 -4 -7 -1 -4 3 l4 4 l4 -4 c3 -4 -2 -7 -4 -3 Z"/>'),
+  'נכדים':svg(H(19,25,12)+H(37,37,7)),
+  'משפחה (בני דודים, דודים, אחיינים)':svg(H(10,23,8)+H(38,23,8)+H(24,31,11)),
+  'חברים':svg(H(15,28,10.5)+H(33,28,10.5)),
+  'תחביבים':svg(H(20,25,12)+'<ellipse class="w o" cx="36" cy="38" rx="9" ry="6.5"/><circle class="b" cx="32" cy="36.5" r="1.7"/><circle class="d" cx="36.5" cy="35" r="1.7"/><circle class="f o" cx="40.5" cy="38.5" r="1.7"/>'),
+  'ספורט':svg(H(20,26,12)+'<path class="b o" d="M8.6 22 Q20 17 31.4 22 L30.6 18.8 Q20 14 9.4 18.8 Z"/><circle class="w o" cx="38" cy="38" r="6.5"/><path class="s" '+T+' d="M38 31.5 v13 M31.5 38 h13"/>'),
+  'אני והכלב שלי':svg(H(16,25,11)+'<ellipse class="d" cx="30" cy="33" rx="2.6" ry="5.5"/><ellipse class="d" cx="44" cy="33" rx="2.6" ry="5.5"/><circle class="w o" cx="37" cy="36" r="7.5"/><circle class="d" cx="34.5" cy="35" r="1.1"/><circle class="d" cx="39.5" cy="35" r="1.1"/><ellipse class="d" cx="37" cy="38.3" rx="1.7" ry="1.3"/>'),
+  'טיולים בחו״ל':svg(H(20,30,12)+'<g transform="rotate(-20 36 12)"><rect class="w o" x="26" y="10" width="20" height="4.6" rx="2.3"/><path class="b o" d="M33 10 l4 -6 h3 l-2 6 Z M33 14.6 l4 6 h3 l-2 -6 Z"/><path class="b o" d="M27 10 l-1 -3.5 h2.5 l2 3.5 Z"/></g>'),
+  'טיולים בארץ':svg(B+'<path class="w o" d="M12.5 23 Q24 3 35.5 23 Z"/><path class="w o" d="M9 22.5 h30 l-2.5 3.2 h-25 Z"/>'),
+  'היום, כללי':svg(B+'<rect class="d" x="15.3" y="25" width="7.6" height="5.6" rx="2"/><rect class="d" x="25.1" y="25" width="7.6" height="5.6" rx="2"/><path class="s" '+T+' d="M22.9 26.6 h2.2 M15.3 26.6 l-3 -1.2 M32.7 26.6 l3 -1.2"/>'),
+  'כוכב הערב לבד, לסוף הקליפ':svg(H(24,31,12)+'<path class="b o" d="M24 2.5 l2.3 5 5.4 .7 -4 3.7 1.1 5.3 -4.8 -2.7 -4.8 2.7 1.1 -5.3 -4 -3.7 5.4 -.7 Z"/>'),
+  'תמונות סוף הסרט':svg(H(19,25,12)+'<rect class="d" x="29" y="34" width="15" height="10" rx="1.6"/><path class="d" d="M29 33.4 l14.4 -3.8 l.7 2.6 l-14.4 3.8 Z"/><path class="s hl" d="M33 31 l1.6 2.2 M38 29.8 l1.6 2.2"/>'),
+  'שכחתם כמה תמונות ואתם חייבים אותן?':svg(H(20,30,12)+'<circle class="w o" cx="31" cy="19.5" r="1.7"/><circle class="w o" cx="38" cy="11" r="7.5"/><path class="s" '+T+' d="M35.6 9 q0 -3 2.6 -3 q2.6 0 2.4 2.4 q-.2 1.6 -2.4 2.6 v1.4"/><circle class="d" cx="38.2" cy="15" r=".9"/>'),
+  'סרטון AI *':svg(B+'<path class="s" d="M24 16 v-6"/><circle class="b o" cx="24" cy="7.5" r="2.7"/><path class="b" d="M40 12 l1.5 4 4 1.5 -4 1.5 -1.5 4 -1.5 -4 -4 -1.5 4 -1.5 Z"/><path class="b" d="M8 10 l1 2.6 2.6 1 -2.6 1 -1 2.6 -1 -2.6 -2.6 -1 2.6 -1 Z"/>')
+};
+const ALIAS={'12+':'נעורים','13+':'נעורים','מינקות עד 12':'ילדות','מינקות עד 13':'ילדות','בית הספר':'בית ספר','קריירה':'עבודה','גן וילדות':'ילדות','משפחה':'משפחה קרובה','חברים ותחביבים':'חברים','חברות ותחביבים':'חברים','כוכבת הערב לבד, לסוף הקליפ':'כוכב הערב לבד, לסוף הקליפ','החתונה':'חתונה','תינוק':'ינקות'};
+const catIcon=name=>CAT[name]||CAT[ALIAS[name]]||svg(B);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad=n=>String(n).padStart(2,'0');
+const uid=()=>Math.random().toString(36).slice(2,9);
+const KEY='galziv-upload-demo-v11';
+const LIMITS={'גן':5,'סבא וסבתא':8,'משפחה (בני דודים, דודים, אחיינים)':20,'ינקות':30,'היום, כללי':15,'חתונה':10,'החתונה':10,'כוכב הערב לבד, לסוף הקליפ':8,'כוכבת הערב לבד, לסוף הקליפ':8};
+// Every category, in clip order. Each clip type starts from this list and Gal trims it; what he leaves is remembered per type.
+Object.assign(LIMITS,{'ילדות':20,'נעורים':20,'בית הספר':8,'חברים':10,'תחביבים':10,'ספורט':10,'אני והכלב שלי':5,'צבא':10,'טיולים בארץ':20,'טיולים בחו״ל':20,'עבודה':15,'קריירה':15,'משפחה קרובה':30,'לימודים':8,'נכדים':20,'XTRA 1':5,'XTRA 2':5,'ינקות':15,'12+':20,'13+':20});
+const ALL=['ינקות','מינקות עד 12','מינקות עד 13','12+','13+','נעורים','גן','בית הספר','חברים','תחביבים','ספורט','אני והכלב שלי','צבא','טיולים בארץ','טיולים בחו״ל','לימודים','עבודה','קריירה','חתונה','משפחה קרובה','נכדים','משפחה (בני דודים, דודים, אחיינים)','סבא וסבתא','היום, כללי','כוכב הערב לבד, לסוף הקליפ','תמונות סוף הסרט','XTRA 1','XTRA 2'];
+const BDAY=ALL.filter(n=>!['מינקות עד 13','13+','לימודים','חתונה','נכדים','תמונות סוף הסרט','XTRA 1','XTRA 2'].includes(n));  // default for every birthday type
+const ALL_OLD=['ינקות','גן','ילדות','סבא וסבתא','בית ספר','נעורים','צבא','חתונה','לימודים','עבודה','משפחה קרובה','נכדים','משפחה (בני דודים, דודים, אחיינים)','חברים','תחביבים','ספורט','אני והכלב שלי','טיולים בחו״ל','טיולים בארץ','היום, כללי','כוכב הערב לבד, לסוף הקליפ','תמונות סוף הסרט'];
+const DESC={'מינקות עד 12':'לפי סדר כרונולוגי','מינקות עד 13':'לפי סדר כרונולוגי','משפחה קרובה':'אני ואמא, אני ואבא, יחד, יחד עם האחים והאחיות ועוד'};  // shown in brackets under the chapter name
+const poolOf=type=>type==='bat'?ALL.map(x=>x.replace('כוכב הערב','כוכבת הערב')):ALL;
+const chaptersFor=type=>((state.templates||{})[type]||(TYPES[type].age?BDAY:poolOf(type).filter(n=>!n.startsWith('XTRA')&&!(type==='bar'&&(n==='מינקות עד 12'||n==='12+'))&&!(type==='bat'&&(n==='מינקות עד 13'||n==='13+'))))).slice();
+const placeAt=(ch,n)=>{const mi=ALL.indexOf(n); if(mi<0) return ch.length; for(let i=0;i<ch.length;i++){ if(ALL.indexOf(ch[i])>mi) return i; } return ch.length;};
+const OPTIONAL_OLD=['גן','סבא וסבתא','חתונה','נכדים','משפחה קרובה','משפחה (בני דודים, דודים, אחיינים)','בית ספר','לימודים','עבודה','תחביבים','ספורט','אני והכלב שלי'];  // offered in the new-client form, not in any default list // chapters with their own limit
+const maxOf=name=>LIMITS[name]||35;   // files per chapter
+
+const PARAM=new URLSearchParams(location.search).get('c')||'';
+const CFG=(()=>{ if(!PARAM) return null; try{ const b=atob(PARAM.replace(/-/g,'+').replace(/_/g,'/'));
+  return JSON.parse(new TextDecoder().decode(Uint8Array.from(b,ch=>ch.charCodeAt(0)))); }catch(e){ return null; } })();
+const SKEY='clipon:'+(PARAM||'test');
+let state={clients:[{id:'client',name:'',type:'bday',age:null,chapters:BDAY.filter(n=>!['צבא','עבודה','קריירה'].includes(n)),title:'',links:[],song:'',notes:'',revision:'',sent:false,sends:0}],current:'client'};
+if(CFG){ const c=state.clients[0]; c.name=String(CFG.n||'').slice(0,80); if(TYPES[CFG.t]) c.type=CFG.t; c.age=+CFG.a||null;
+  // chapters: a number points into the shared chapter list (ALL), a string is a custom chapter
+  if(Array.isArray(CFG.ch)&&CFG.ch.length) c.chapters=CFG.ch.map(x=>typeof x==='number'?poolOf(c.type)[x]:String(x).slice(0,60)).filter(Boolean).slice(0,40); }
+try{ const s=JSON.parse(localStorage.getItem(SKEY)||'null'); const c=state.clients[0];
+  if(s){ ['title','song','notes','revision'].forEach(k=>{ if(typeof s[k]==='string') c[k]=s[k]; }); if(Array.isArray(s.links)) c.links=s.links; c.sent=!!s.sent; c.sends=+s.sends||0; } }catch(e){}
+const save=()=>{ try{ const c=state.clients[0]; localStorage.setItem(SKEY,JSON.stringify({title:c.title,links:c.links,song:c.song,notes:c.notes,revision:c.revision,sent:c.sent,sends:c.sends})); }catch(e){} };
+
+const files={};            // "clientId:chapterIndex" -> [{id,url,video,note,example,name}]  (in memory only)
+const fl=(c,i)=>files[c.id+':'+i]||(files[c.id+':'+i]=[]);
+let sel=null;              // {key,id} selected tile
+let draft=null;            // new-client form
+let linkErr='', confirmDel=null, copyText='', openD=null, confirmRm=null;
+
+// Example tiles so the first chapter shows how numbering looks. Marked "דוגמה".
+(function seed(){
+  const c=state.clients.find(x=>x.id==='zohar'); if(!c||!c.chapters.length) return;
+  const hues=[[255,194,26],[86,97,120],[17,27,48]];
+  hues.forEach((h,i)=>{
+    const cv=document.createElement('canvas'); cv.width=cv.height=160; const g=cv.getContext('2d');
+    const gr=g.createLinearGradient(0,0,160,160); gr.addColorStop(0,`rgb(${h})`); gr.addColorStop(1,`rgba(${h},.55)`);
+    g.fillStyle='#fff'; g.fillRect(0,0,160,160); g.fillStyle=gr; g.fillRect(0,0,160,160);
+    g.fillStyle='rgba(255,255,255,.75)'; g.beginPath(); g.arc(80,66,24,0,7); g.fill(); g.beginPath(); g.ellipse(80,140,44,40,0,0,7); g.fill();
+    fl(c,0).push({id:uid(),url:cv.toDataURL(),video:false,note:'',example:true,name:'example.jpg'});
+  });
+})();
+
+const cur=()=>state.clients.find(c=>c.id===state.current)||state.clients[0];
+const typeLabel=c=>TYPES[c.type].label+(TYPES[c.type].age&&c.age?' '+c.age:'');
+const counts=c=>{let p=0,v=0;c.chapters.forEach((_,i)=>fl(c,i).forEach(f=>f.video?v++:p++));fl(c,'ai').concat(fl(c,'extra')).forEach(f=>f.video?v++:p++);return{p,v,t:p+v}};
+const countTxt=c=>{const n=counts(c); if(!n.t) return 'עוד לא נוספו קבצים'; const a=[]; if(n.p)a.push(n.p+' תמונות'); if(n.v)a.push(n.v+' סרטונים'); return a.join(' · ')};
+const folder=c=>(c.name+' '+typeLabel(c)).trim().replace(/\//g,'-').replace(/\s+/g,'_');
+
+function toast(t,ms){const el=document.getElementById('toast');el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,ms||2400)}
+
+function shell(view,inner){
+  if(TEST) return (SCRIPT_URL?'':`<div class="demo"><div class="demo-in"><span>מצב בדיקה: כתובת השליחה עוד לא הוגדרה, אז שום דבר לא נשלח.</span></div></div>`)+inner;
+  return `<div class="demo"><div class="demo-in"><span>דמו. הקבצים לא נשמרים ולא נשלחים לשום מקום.</span>
+    <nav class="tabs" aria-label="תצוגה"><a href="#clients" ${view==='clients'?'aria-current="page"':''}>המסך שלך</a><a href="#client-page" ${view==='client-page'?'aria-current="page"':''}>מה ${esc(((cur()||{}).name||'הלקוח').split(' ')[0])} רואה</a></nav></div></div>`+inner;
+}
+
+/* ---------- client page ---------- */
+function clientView(){
+  const c=cur(); if(!c) return adminView();
+  const first=esc(c.name.split(' ')[0]), noun=TYPES[c.type].noun||'קליפ';
+  const card=(name,i,MAX,extra,num)=>{
+    const list=fl(c,i), key=c.id+':'+i;
+    const tiles=list.map((f,j)=>`<button type="button" class="tile" data-act="sel" data-key="${key}" data-id="${f.id}" aria-pressed="${sel&&sel.id===f.id}" aria-label="קובץ ${j+1} בפרק ${esc(name)}">
+        ${f.video?`<video src="${f.url}#t=0.1" muted playsinline preload="metadata"></video>`:`<img src="${f.url}" alt="">`}
+        <span class="badge n">${j+1}</span>${f.video?'<span class="badge v">סרטון</span>':''}${f.example?'<span class="badge e">דוגמה</span>':''}${f.note?'<span class="badge c">הערה</span>':''}${f.sent?'<span class="badge e">✓ נשלח</span>':''}</button>`).join('');
+    let tools='';
+    if(sel&&sel.key===key){const j=list.findIndex(f=>f.id===sel.id); const f=list[j];
+      if(f&&f.sent) tools=`<div class="tools"><p class="hint">הקובץ הזה כבר נשלח לגל.</p></div>`;
+      else if(f) tools=`<div class="tools"><div class="row">
+          <button type="button" class="btn small" data-act="mv" data-d="-1" ${j===0?'disabled':''}>להקדים</button>
+          <button type="button" class="btn small" data-act="mv" data-d="1" ${j===list.length-1?'disabled':''}>לאחר</button>
+          <button type="button" class="btn small danger" data-act="rm">להסיר</button></div>
+          <label class="lbl" for="note-${f.id}">הערה לקובץ ${j+1}</label>
+          <input type="text" id="note-${f.id}" data-in="fnote" value="${esc(f.note)}" placeholder="למשל: זה סבא יוסף, חשוב שיופיע"></div>`;}
+    return `<section class="card" aria-labelledby="ch-${i}">
+      <div class="chap-head">${catIcon(name)}<span class="chap-num">${num}</span><h2 id="ch-${i}">${esc(name)} <span class="max">(עד ${MAX} תמונות)</span></h2><span class="chap-count">${list.length?list.length+' מתוך '+MAX:''}</span></div>${DESC[name]?`<p class="hint">(${DESC[name]})</p>`:''}${extra}
+      ${list.length?`<div class="grid">${tiles}</div>`:`<div class="empty">עוד אין כאן תמונות. אפשר גם לדלג על פרק.</div>`}
+      ${tools}
+      ${list.length>=MAX?`<div class="empty">הפרק מלא: ${MAX} קבצים. כדי להוסיף תמונה אחרת, הסירו קודם אחת.</div>`
+        :`<div class="row"><label class="btn grow" for="file-${i}">בחרו מהגלריה</label><label class="btn grow" for="cam-${i}">צלמו תמונה ישנה / מה שחסר</label></div>
+      <input type="file" id="cam-${i}" data-ch="${i}" accept="image/*" capture="environment" hidden>
+      <p class="hint">אפשר לסמן הרבה תמונות בבת אחת.${list.length?' נשארו '+(MAX-list.length)+' מקומות בפרק.':''}</p>
+      <input type="file" id="file-${i}" data-ch="${i}" accept="image/*,video/*" multiple hidden>`}
+    </section>`;};
+  const quote=t=>`<figure class="quote"><blockquote>${t}</blockquote></figure>`;
+  const chapters=c.chapters.map((name,i)=>card(name,i,maxOf(name),'',pad(i+1))+(i===2?quote('נהנים לעבוד עם גל? ספרו לחברים.'):'')).join('');
+  const ai=card('סרטון AI *','ai',8,`<p class="ai-line">את הרעיון לסרטון ה-AI מפתחים יחד, בשיחה עם גל.</p><p class="paid">* תוספת בתשלום</p>
+      <p class="hint">כדי ליצור סרטון AI של חתן או כלת השמחה, צריך תמונות חדות שלו או שלה:</p>
+      <ul class="shots"><li>${IC.close}<span><strong>3 תמונות קלוז אפ</strong><br>הפנים ממלאות את התמונה</span></li>
+      <li>${IC.profile}<span><strong>2 תמונות פרופיל</strong><br>מהצד, בקלוז אפ או במדיום שוט</span></li>
+      <li>${IC.long}<span><strong>לונג שוט אחד</strong><br>כל הגוף, מלמטה עד למעלה</span></li>
+      <li class="opt">${IC.back}<span><strong>אפשר להוסיף: מאחור</strong><br>הראש והכתפיים מהגב</span></li>
+      <li class="opt">${IC.q45}<span><strong>אפשר להוסיף: 45 מעלות</strong><br>הפנים מסובבות חצי הצידה</span></li>
+      </ul>
+      <p class="hint"><strong>הכול בפוקוס.</strong> תמונה מטושטשת לא תעבוד.</p>`,'AI');
+  const n=counts(c);
+  return shell('client-page',`
+  <header class="band"><div class="band-in">${MARK}<div class="logo" role="img" aria-label="הלוגו של GALZIV"></div>
+    <div class="band-txt"><span class="appname"><b>קליפון</b><small>עושים סדר בתמונות...</small></span><h1>${first?first+', ':''}מכינים את ה${noun}</h1><span class="sub">${esc(typeLabel(c))}</span></div></div></header>
+  <main class="main">
+    <section class="card"><ol class="steps">
+      <li>בכל פרק לוחצים על הכפתור ובוחרים תמונות מהטלפון, לפי הסדר שבו הן יופיעו.</li>
+      <li>מוסיפים קישור לשיר מיוטיוב והערות, אם יש.</li>
+      <li>לוחצים על "שלחו לגל" למטה. אפשר לחזור לדף הזה ולהוסיף גם אחר כך.</li></ol>
+      <p class="hint">* כדי שה${noun} יזרום ויספר את הסיפור הכי טוב, לפעמים לא כל התמונות נכנסות אליו.</p></section>
+
+    <section class="card"><h2>כותרת הפתיחה</h2>
+      <label class="hint" for="clip-title">מה ייכתב בתחילת ה${noun}?</label>
+      <input type="text" class="title-in" id="clip-title" data-in="title" value="${esc(c.title)}" placeholder="למשל: ליה חוגגת 12" maxlength="60"></section>
+
+    ${quote('הפורמט שמרגש את כולם כבר 20 שנה.')}
+
+    <section class="card"><h2>יש תמונות ישנות מאלבום?</h2>
+      <p class="hint">בכל פרק יש כפתור "צלמו תמונה ישנה / מה שחסר" שפותח את המצלמה. כדי שהתמונה תצא טוב:</p>
+      <ul class="tips">
+        <li><b>אור:</b> לא מתחת למנורה. הכי טוב ליד חלון, באור יום.</li>
+        <li><b>הבזקים:</b> מכבים פלאש. אם רואים ברק או השתקפות על התמונה, מטים קצת את הטלפון עד שהוא נעלם.</li>
+        <li><b>פוקוס:</b> נוגעים במסך על התמונה ומחכים שהיא תתחדד לפני שמצלמים.</li>
+        <li><b>מסגרת:</b> מחזיקים את הטלפון ישר מעל התמונה וממלאים בה את כל המסך, כמה שפחות שולחן ורקע מסביב.</li>
+      </ul></section>
+
+    ${chapters}
+
+    ${card('שכחתם כמה תמונות ואתם חייבים אותן?','extra',5,'<p class="hint">תמונות שלא מצאו מקום באף פרק. כתבו בהערה לכל תמונה לאן היא שייכת.</p>','+')}
+
+    ${ai}
+
+    <section class="card"><h2>מוזיקה <span class="max">(לפחות 4 שירים)</span></h2>
+      ${(k=>`<p class="songs ${k>=4?'ok':k>=3?'mid':'bad'}" role="status">${k>=4?`מעולה, יש ${k} שירים.`:k===0?'עוד לא הוספתם שירים. צריך לפחות 4.':k===3?'הוספתם 3 שירים. נשאר עוד שיר אחד.':k===1?'הוספתם שיר אחד. צריך לפחות 4, נשארו עוד 3.':`הוספתם ${k} שירים. צריך לפחות 4, נשארו עוד ${4-k}.`}</p>`)(c.links.length)}
+      <p class="hint">ביוטיוב לוחצים על "שיתוף", מעתיקים את הקישור ומדביקים כאן.</p>
+      ${c.links.length?`<ul class="links">${c.links.map((l,i)=>`<li><span>${esc(l)}</span><button type="button" class="btn small danger" data-act="rmlink" data-i="${i}">הסר</button></li>`).join('')}</ul>`:''}
+      <div class="row"><input type="url" class="grow" id="yt-link" dir="ltr" placeholder="https://youtu.be/..." aria-label="קישור לשיר ביוטיוב"><button type="button" class="btn" data-act="addlink">הוסיפו שיר</button></div>
+      ${linkErr?`<p class="err" role="alert">${esc(linkErr)}</p>`:''}
+      <label class="lbl" for="song">אין קישור? כתבו שם של שיר וזמר</label>
+      <input type="text" id="song" data-in="song" value="${esc(c.song)}"></section>
+
+    <section class="card"><h2>הערות לגל</h2>
+      <label class="hint" for="notes">כתבו ברכה לסיום, ואיזה סגנון אתם אוהבים.</label>
+      <textarea id="notes" data-in="notes">${esc(c.notes)}</textarea></section>
+
+    ${c.sent?`<section class="card"><div class="okbox">${SCRIPT_URL?'החומרים נשלחו לגל. תודה! אפשר להוסיף עוד תמונות ולשלוח עדכון.':'מצב בדיקה: שום דבר לא נשלח באמת. כך ייראה הדף אחרי שליחה.'}</div><h2>תיקונים אחרי שראיתם את ה${noun}</h2>
+      <label class="hint" for="revision">מה להוריד, מה להוסיף, מה לשנות. תמונות חדשות מוסיפים בפרקים למעלה.</label>
+      <textarea id="revision" data-in="revision" placeholder="למשל: להוריד את תמונה 4 בפרק צבא, להוסיף את התמונה מהטיול ליוון">${esc(c.revision)}</textarea></section>`:''}
+    <div class="pad-bottom"></div>
+  </main>
+  <div class="sendbar"><div class="sendbar-in"><span class="cnt" aria-live="polite">${esc(prog||countTxt(c))}</span>
+    <button type="button" class="btn primary" data-act="send" ${!busy&&(n.t||c.sent)?'':'disabled'}>${busy?'שולחים...':c.sent?'שלחו עדכון':'שלחו לגל'}</button></div></div>`);
+}
+
+/* ---------- admin ---------- */
+function adminView(){
+  const form=draft?`<section class="card" aria-labelledby="new-h"><h2 id="new-h">לקוח חדש</h2>
+      <label class="lbl" for="new-name">שם הלקוח</label>
+      <input type="text" id="new-name" data-in="dname" value="${esc(draft.name)}" placeholder="שם ושם משפחה">
+      <span class="lbl">סוג הקליפ</span>
+      <div class="chips">${Object.keys(TYPES).map(k=>`<button type="button" class="chip" data-act="dtype" data-k="${k}" aria-pressed="${draft.type===k}">${TYPES[k].label}${TYPES[k].dec?' '+TYPES[k].dec:''}</button>`).join('')}</div>
+      ${TYPES[draft.type].age?`<label class="lbl" for="new-age">גיל מדויק (למשל 65 או 72)</label><input type="number" id="new-age" data-in="dage" min="1" max="120" inputmode="numeric" value="${esc(draft.age)}" style="max-width:140px">`:''}
+      <span class="lbl">פרקים, לפי הסדר בקליפ *</span>
+      <span class="hint">* המספר בסוגריים הוא מספר התמונות בפרק.</span>
+      <span class="hint">הורד עם ה-× את מה שלא מתאים. מה שתשאיר יישמר כברירת המחדל של ${TYPES[draft.type].label}${TYPES[draft.type].dec?' '+TYPES[draft.type].dec:''}.</span>
+      <div class="chips">${draft.chapters.map((n,i)=>`<span class="chip static"><span class="chap-num">${pad(i+1)}</span>${esc(n)} (${maxOf(n)})<button type="button" class="x" data-act="dchrm" data-i="${i}" aria-label="הסר את הפרק ${esc(n)}">×</button></span>`).join('')}</div>
+      <div class="row"><input type="text" class="grow" id="new-ch" placeholder="פרק נוסף, למשל: טיול לתאילנד" aria-label="שם פרק נוסף"><button type="button" class="btn" data-act="dchadd">הוסף פרק</button></div>
+      ${(o=>o.length?`<span class="lbl">פרקים שאפשר לפתוח</span><div class="chips">${o.map(n=>`<button type="button" class="chip" data-act="dopt" data-n="${esc(n)}">+ ${esc(n)} (${maxOf(n)})</button>`).join('')}</div>`:'')(poolOf(draft.type).filter(n=>!draft.chapters.includes(n)&&!draft.chapters.includes('ה'+n)))}
+      ${draft.err?`<p class="err" role="alert">${esc(draft.err)}</p>`:''}
+      <div class="row"><button type="button" class="btn primary grow" data-act="dsave">צור דף ללקוח</button><button type="button" class="btn" data-act="dcancel">ביטול</button></div></section>`
+    :`<button type="button" class="btn primary wide" data-act="new">+ לקוח חדש</button>`;
+  const cards=state.clients.map(c=>{const n=counts(c);
+    const pill=c.sent?'<span class="pill ok">התקבלו חומרים</span>':n.t?'<span class="pill">באמצע העלאה</span>':'<span class="pill">ממתין לחומרים</span>';
+    const notes=[];c.chapters.forEach((ch,i)=>fl(c,i).forEach((f,j)=>{if(f.note)notes.push(`${pad(i+1)}_${ch} / ${pad(j+1)}: ${f.note}`)}));
+    return `<section class="card" id="card-${c.id}"><div class="client-top"><div><h2>${esc(c.name)}</h2><span class="hint">${esc(typeLabel(c))} · ${countTxt(c)}</span></div>${pill}</div>
+      <div class="row"><button type="button" class="btn grow" data-act="open" data-id="${c.id}">פתח את דף הלקוח</button><button type="button" class="btn grow" data-act="copy" data-id="${c.id}">העתק הודעה לווטסאפ</button></div>
+      ${copyText&&copyText.id===c.id?`<div class="copybox">${esc(copyText.t)}</div>`:''}
+      <details ${openD===c.id?'open':''}><summary>פרקים ומה שמגיע ל-Google Drive</summary><div class="body">
+        <div class="tree"><span>${esc(folder(c))}/</span>${c.chapters.map((ch,i)=>`<span class="in"><span>${pad(i+1)}_${esc(ch.replace(/\s+/g,'_'))}/</span><span>${fl(c,i).length} קבצים</span></span>`).join('')}<span class="in"><span>${pad(c.chapters.length+1)}_השלמות/</span><span>${fl(c,'extra').length} קבצים</span></span><span class="in"><span>AI_סרטון/ *</span><span>${fl(c,'ai').length} קבצים</span></span><span class="in"><span>מוזיקה_והערות.txt</span><span></span></span></div>
+        <p class="kv"><b>כותרת פתיחה:</b> ${c.title?esc(c.title):'עוד לא נכתבה'}</p>
+        <p class="kv"><b>מוזיקה:</b> ${c.links.length||c.song?esc(c.links.concat(c.song||[]).join(' , ')):'עוד לא נבחרה'}</p>
+        ${c.notes?`<p class="kv"><b>הערות:</b> ${esc(c.notes)}</p>`:''}
+        ${notes.length?`<p class="kv"><b>הערות לקבצים:</b><br>${notes.map(esc).join('<br>')}</p>`:''}
+        ${c.revision?`<p class="kv"><b>תיקונים:</b> ${esc(c.revision)}</p>`:''}
+        <p class="kv"><b>הפרקים של הלקוח (ה-× מוריד פרק):</b></p>
+        <div class="chips">${c.chapters.map((n,i)=>`<span class="chip static">${esc(n)} (${maxOf(n)})<button type="button" class="x" data-act="crm" data-id="${c.id}" data-i="${i}" aria-label="הורד את הפרק ${esc(n)}">×</button></span>`).join('')}</div>
+        ${confirmRm&&confirmRm.id===c.id?`<p class="err" role="alert">בפרק "${esc(c.chapters[confirmRm.i])}" יש ${fl(c,confirmRm.i).length} קבצים שהלקוח העלה. לחץ שוב על ה-× שלו כדי להוריד אותו בכל זאת.</p>`:''}
+        ${(o=>o.length?`<p class="kv"><b>לפתוח ללקוח פרק נוסף:</b></p><div class="chips">${o.map(n=>`<button type="button" class="chip" data-act="copt" data-id="${c.id}" data-n="${esc(n)}">+ ${esc(n)} (${maxOf(n)})</button>`).join('')}</div>`:'')(poolOf(c.type).filter(n=>!c.chapters.includes(n)&&!c.chapters.includes('ה'+n)))}
+        <div class="row"><button type="button" class="btn small danger" data-act="del" data-id="${c.id}">${confirmDel===c.id?'בטוח? לחץ שוב למחיקה':'מחק לקוח'}</button></div>
+      </div></details></section>`}).join('');
+  return shell('clients',`
+  <header class="band"><div class="band-in">${MARK}<div class="logo" role="img" aria-label="הלוגו של GALZIV"></div>
+    <div class="band-txt"><span class="appname"><b>קליפון</b><small>עושים סדר בתמונות...</small></span><h1>הלקוחות שלי</h1><span class="sub">${state.clients.length} לקוחות · לכל אחד דף העלאה משלו</span></div></div></header>
+  <main class="main">${form}${cards||'<div class="empty">אין עדיין לקוחות. לחץ על "לקוח חדש" כדי ליצור דף העלאה ראשון.</div>'}</main>`);
+}
+
+function render(){
+  const v=TEST||location.hash==='#client-page'?'client-page':'clients';
+  document.getElementById('app').innerHTML=v==='client-page'?clientView():adminView();
+}
+
+/* ---------- events ---------- */
+const app=document.getElementById('app');
+app.addEventListener('input',e=>{
+  const k=e.target.dataset.in; if(!k) return; const c=cur(), v=e.target.value;
+  if(k==='dname') draft.name=v; else if(k==='dage') draft.age=v;
+  else if(k==='fnote'){ if(sel){const f=(files[sel.key]||[]).find(x=>x.id===sel.id); if(f) f.note=v;} }
+  else { c[k]=v; save(); }
+});
+app.addEventListener('change',e=>{
+  const t=e.target; if(t.type!=='file') return; const c=cur(), list=fl(c,t.dataset.ch);
+  const MAX=t.dataset.ch==='ai'?8:t.dataset.ch==='extra'?5:maxOf(c.chapters[+t.dataset.ch]);
+  const picked=[...t.files], room=Math.max(0,MAX-list.length), take=picked.slice(0,room);
+  take.forEach(f=>list.push({id:uid(),url:URL.createObjectURL(f),video:f.type.startsWith('video/'),note:'',name:f.name,file:f,sent:false}));
+  t.value=''; render();
+  if(picked.length>room) toast(`נוספו ${take.length}. ${picked.length-room} לא נכנסו, כי בפרק יש מקום ל-${MAX} בלבד`);
+  else if(take.length) toast(take.length+' קבצים נוספו לפרק');
+});
+app.addEventListener('click',e=>{
+  const b=e.target.closest('[data-act]'); if(!b) return; const a=b.dataset.act, c=cur();
+  if(a!=='del') confirmDel=null;
+  if(a!=='crm') confirmRm=null;
+  if(a==='sel'){ sel=(sel&&sel.id===b.dataset.id)?null:{key:b.dataset.key,id:b.dataset.id}; }
+  else if(a==='mv'||a==='rm'){ const list=files[sel.key], j=list.findIndex(f=>f.id===sel.id);
+    if(a==='rm'){ list.splice(j,1); sel=null; } else { const d=+b.dataset.d, f=list.splice(j,1)[0]; list.splice(j+d,0,f); } }
+  else if(a==='addlink'){ const inp=document.getElementById('yt-link'), v=inp.value.trim();
+    if(!/^(https?:\/\/)?((www|m|music)\.)?(youtube\.com|youtu\.be)\/\S+/i.test(v)) linkErr='זה לא נראה כמו קישור מיוטיוב. העתיקו אותו מכפתור "שיתוף" ביוטיוב.';
+    else { linkErr=''; c.links.push(v); save(); } }
+  else if(a==='rmlink'){ c.links.splice(+b.dataset.i,1); save(); }
+  else if(a==='send'){ doSend(); return; }
+  else if(a==='new'){ draft={name:'',type:'bday60',age:60,chapters:chaptersFor('bday60'),err:''}; }
+  else if(a==='dtype'){ draft.type=b.dataset.k; draft.chapters=chaptersFor(draft.type); if(TYPES[draft.type].dec) draft.age=TYPES[draft.type].dec; }
+  else if(a==='dchrm'){ draft.chapters.splice(+b.dataset.i,1); }
+  else if(a==='dchadd'){ const v=document.getElementById('new-ch').value.trim(); if(v) draft.chapters.push(v); }
+  else if(a==='dopt'){ const n=b.dataset.n, army=draft.chapters.indexOf('צבא'), today=draft.chapters.indexOf('היום, כללי');
+    const kid=draft.chapters.indexOf('ילדות');
+    const at=placeAt(draft.chapters,n); draft.chapters.splice(at,0,n); }
+  else if(a==='copt'){ const cl=state.clients.find(x=>x.id===b.dataset.id), n=b.dataset.n, ch=cl.chapters;
+    const kid=ch.indexOf('ילדות'), army=ch.indexOf('צבא'), today=ch.indexOf('היום, כללי');
+    const at=placeAt(ch,n);
+    for(let i=ch.length-1;i>=at;i--) files[cl.id+':'+(i+1)]=files[cl.id+':'+i]||[];   // keep uploaded files with their chapter
+    files[cl.id+':'+at]=[]; ch.splice(at,0,n); sel=null; openD=cl.id; save(); toast('הפרק "'+n+'" נפתח ללקוח'); }
+  else if(a==='crm'){ const cl=state.clients.find(x=>x.id===b.dataset.id), i=+b.dataset.i, cnt=fl(cl,i).length; openD=cl.id;
+    if(cl.chapters.length<=1){ confirmRm=null; toast('חייב להישאר לפחות פרק אחד'); }
+    else if(cnt&&!(confirmRm&&confirmRm.id===cl.id&&confirmRm.i===i)){ confirmRm={id:cl.id,i}; }
+    else { for(let j=i;j<cl.chapters.length-1;j++) files[cl.id+':'+j]=files[cl.id+':'+(j+1)]||[];   // keep files with their chapter
+      delete files[cl.id+':'+(cl.chapters.length-1)]; const nm=cl.chapters.splice(i,1)[0]; confirmRm=null; sel=null; save(); toast('הפרק "'+nm+'" הורד'); } }
+  else if(a==='dcancel'){ draft=null; }
+  else if(a==='dsave'){
+    const age=+draft.age;
+    if(!draft.name.trim()) draft.err='חסר שם לקוח.';
+    else if(!draft.chapters.length) draft.err='צריך לפחות פרק אחד.';
+    else if(TYPES[draft.type].age&&!(age>=1&&age<=120)) draft.err='הגיל צריך להיות מספר בין 1 ל-120.';
+    else { (state.templates=state.templates||{})[draft.type]=draft.chapters.slice();
+      const n={id:uid(),name:draft.name.trim(),type:draft.type,age:TYPES[draft.type].age?age:null,chapters:draft.chapters,title:'',links:[],song:'',notes:'',revision:'',sent:false};
+      state.clients.unshift(n); state.current=n.id; draft=null; save(); render(); toast('נוצר דף העלאה עבור '+n.name); return; } }
+  else if(a==='open'){ state.current=b.dataset.id; save(); sel=null; location.hash='#client-page'; window.scrollTo(0,0); return; }
+  else if(a==='copy'){ const cl=state.clients.find(x=>x.id===b.dataset.id);
+    const t=`היי ${cl.name.split(' ')[0]}, כאן מעלים את התמונות והסרטונים לקליפ, מסודר לפי פרקים: [הקישור האישי יופיע כאן בגרסה האמיתית]`;
+    copyText={id:cl.id,t};
+    try{ navigator.clipboard.writeText(t).then(()=>toast('ההודעה הועתקה'),()=>toast('סמן את הטקסט והעתק ידנית')); }catch(_){ toast('סמן את הטקסט והעתק ידנית'); } }
+  else if(a==='del'){ const id=b.dataset.id; if(confirmDel!==id){ confirmDel=id; openD=id; } else { state.clients=state.clients.filter(x=>x.id!==id); if(state.current===id) state.current=(state.clients[0]||{}).id; confirmDel=null; save(); toast('הלקוח נמחק'); } }
+  render();
+});
+/* ---------- sending to Google Drive ---------- */
+let busy=false, prog='';
+const pad3=n=>String(n).padStart(3,'0');
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function setProg(t){ prog=t; const el=document.querySelector('.sendbar .cnt'); if(el) el.textContent=t; }
+const warnLeave=e=>{ e.preventDefault(); e.returnValue=''; };
+const keysOf=c=>c.chapters.map((_,i)=>String(i)).concat(['extra','ai']);
+const folderOf=(c,k)=>(k==='extra'?pad(c.chapters.length+1)+'_השלמות':k==='ai'?'AI_סרטון':pad(+k+1)+'_'+c.chapters[+k]).replace(/[\/\\]/g,'-').replace(/\s+/g,'_');
+const extOf=name=>((String(name).match(/\.[a-z0-9]{1,5}$/i)||[''])[0]).toLowerCase();
+
+// Requests go as text/plain so the browser sends them straight to Apps Script without a CORS preflight.
+async function api(body){
+  const r=await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify(body)});
+  if(!r.ok) throw new Error('HTTP '+r.status);
+  const j=await r.json(); if(!j.ok) throw new Error(j.error||'error'); return j;
+}
+async function retry(fn,tries=4){
+  for(let i=0;;i++){ try{ return await fn(); }catch(e){ if(i>=tries-1) throw e; await sleep(1500*(i+1)*(i+1)); } }
+}
+const b64=blob=>new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(String(r.result).split(',')[1]||''); r.onerror=()=>rej(r.error); r.readAsDataURL(blob); });
+
+// Light compression for photos: long side up to IMG_MAX, JPEG at IMG_Q. Videos and anything that fails stay original.
+async function shrink(file){
+  if(!IMG_MAX||!/^image\/(jpeg|png|webp|heic|heif)$/i.test(file.type)) return file;
+  try{
+    const url=URL.createObjectURL(file), img=new Image(); img.src=url;
+    try{ await img.decode(); } finally{ URL.revokeObjectURL(url); }
+    const k=Math.min(1,IMG_MAX/Math.max(img.naturalWidth,img.naturalHeight));
+    const w=Math.round(img.naturalWidth*k), h=Math.round(img.naturalHeight*k);
+    const cv=document.createElement('canvas'); cv.width=w; cv.height=h;
+    const g=cv.getContext('2d'); g.fillStyle='#fff'; g.fillRect(0,0,w,h); g.drawImage(img,0,0,w,h);
+    const blob=await new Promise(r=>cv.toBlob(r,'image/jpeg',IMG_Q));
+    return blob&&blob.size<file.size?new File([blob],'photo.jpg',{type:'image/jpeg'}):file;
+  }catch(e){ return file; }
+}
+
+async function uploadOne(file,folderId,name,onBytes){
+  const mime=file.type||'application/octet-stream';
+  if(file.size<=CHUNK){
+    const data=await b64(file);
+    await retry(()=>api({action:'file',folderId,name,mime,data}));
+    onBytes(file.size); return;
+  }
+  const {session}=await retry(()=>api({action:'start',folderId,name,mime,size:file.size}));
+  let pos=0, fails=0;
+  while(pos<file.size){
+    const end=Math.min(pos+CHUNK,file.size);
+    try{
+      const data=await b64(file.slice(pos,end));
+      const r=await api({action:'chunk',session,start:pos,size:file.size,data});
+      const next=r.done?file.size:r.next; onBytes(next-pos); pos=next; fails=0;
+    }catch(e){
+      if(++fails>4) throw e;
+      await sleep(1500*fails*fails);
+      try{ const st=await api({action:'status',session,size:file.size}); const next=st.done?file.size:st.next; if(next>pos){ onBytes(next-pos); pos=next; } }catch(_){}
+    }
+  }
+}
+
+function notesText(c,sentNow,failed){ const ok=sentNow.length;
+  const L=[];
+  L.push(`===== משלוח ${c.sends} · ${new Date().toLocaleString('he-IL')} =====`);
+  L.push(`לקוח: ${c.name||'(בלי שם)'} · ${typeLabel(c)}`);
+  L.push('כותרת פתיחה: '+(c.title||'—'));
+  L.push('שירים:');
+  c.links.forEach((l,i)=>L.push(`  ${i+1}. ${l}`));
+  if(c.song) L.push('  בלי קישור: '+c.song);
+  if(!c.links.length&&!c.song) L.push('  —');
+  L.push('הערות לגל:', c.notes||'—');
+  if(c.revision) L.push('תיקונים:', c.revision);
+  const fn=[];
+  sentNow.forEach(f=>{ if(f.note) fn.push(`  ${f.driveName}: ${f.note}`); });
+  if(fn.length) L.push('הערות לקבצים:', ...fn);
+  L.push(`קבצים שהגיעו במשלוח הזה: ${ok}`+(failed?` · לא הגיעו: ${failed}`:''));
+  return L.join('\n');
+}
+
+async function doSend(){
+  const c=cur(); if(busy) return;
+  if(!SCRIPT_URL){ c.sent=true; save(); render(); toast('מצב בדיקה: שום דבר לא נשלח באמת'); return; }
+  busy=true; prog='מתחברים ל-Drive...'; render();
+  window.addEventListener('beforeunload',warnLeave);
+  const keys=keysOf(c), folders=keys.map(k=>folderOf(c,k));
+  let msg='';
+  try{
+    const b=await retry(()=>api({action:'begin',client:c.name?folder(c):'בדיקה_'+folder(c),folders}));
+    const jobs=[];
+    keys.forEach((k,idx)=>{ let n=b.counts[idx]||0;
+      fl(c,k).forEach(f=>{ if(!f.sent&&f.file) jobs.push({f,folderId:b.folders[idx],folder:folders[idx],num:++n}); }); });
+    const total=jobs.reduce((s,j)=>s+j.f.file.size,0)||1;
+    let doneB=0, doneN=0, failed=0, qi=0;
+    const upd=()=>setProg(`שולחים ${doneN} מתוך ${jobs.length} · ${Math.min(99,Math.floor(doneB*100/total))}% · לא לסגור את הדף`);
+    upd();
+    const worker=async()=>{
+      while(qi<jobs.length){
+        const j=jobs[qi++], orig=j.f.file.size; let got=0;
+        try{
+          const up=await shrink(j.f.file), scale=orig/(up.size||1), name=pad3(j.num)+(extOf(up.name)||extOf(j.f.name));
+          await uploadOne(up,j.folderId,name,d=>{ got+=d*scale; doneB+=d*scale; upd(); });
+          j.f.sent=true; j.f.driveName=j.folder+'/'+name; doneN++;
+          doneB+=orig-got;   // round off whatever the progress counter missed
+        }catch(e){ console.error(e); failed++; doneB-=got; }
+        upd();
+      }
+    };
+    await Promise.all([worker(),worker(),worker()]);
+    setProg('שומרים את ההערות...');
+    c.sends=(c.sends||0)+1;
+    await retry(()=>api({action:'notes',clientId:b.clientId,text:notesText(c,jobs.filter(j=>j.f.sent).map(j=>j.f),failed)}));
+    c.sent=true; save();
+    msg=failed?`${failed} קבצים לא נשלחו. לחצו שוב על "שלחו עדכון" כדי לנסות שוב.`:`נשלח לגל! ${doneN?doneN+' קבצים הגיעו.':'ההערות עודכנו.'}`;
+  }catch(e){ console.error(e); msg='השליחה נכשלה. בדקו את החיבור לאינטרנט ונסו שוב.'; }
+  busy=false; prog=''; window.removeEventListener('beforeunload',warnLeave);
+  render(); toast(msg,7000);
+}
+
+window.addEventListener('hashchange',()=>{sel=null; if(location.hash!=='#client-page') openD=state.current; render();
+  if(location.hash!=='#client-page'){ const el=document.getElementById('card-'+state.current); if(el&&el.scrollIntoView) el.scrollIntoView({block:'start'}); }});
+render();
+</script>
+
+</body></html>
